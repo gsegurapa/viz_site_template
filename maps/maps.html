@@ -8,9 +8,12 @@
     <title>Meteor Strikes</title>
 </head>
 <body>
-         <canvas id='basicGlobe' width='400' height='400' style='width: 400px; height: 400px; cursor: move;'></canvas>
-    <script>
-     (function() {
+  <div style='text-align: center;'>
+    <canvas id='basicGlobe' width='400' height='400'></canvas>
+  </div>
+  
+  <script>
+(function() {
   var canvas = document.getElementById('basicGlobe');
   var planet = planetaryjs.planet();
   // Loading this plugin technically happens automatically,
@@ -26,6 +29,5 @@
   planet.draw(canvas);
 })();
   </script>
-    
 </body>
 </html>
