@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script type='text/javascript' src='http://d3js.org/d3.v3.min.js'></script>
+  <script type='text/javascript' src='http://d3js.org/topojson.v1.min.js'></script>
+  <script type='text/javascript' src='planetaryjs.min.js'></script>
+  <meta charset='utf-8'>
+  <title>Meteor Strikes</title>
+  <link href="style.css" type = "text/css" rel ="stylesheet">
+
+</head>
+<body>
+  <div>
+    <h1> Meteorite Landings </h1>
+  </div>
+  <canvas id='meatierEarth' ></canvas>
+  <div id='textBox'>
+    First name: <input type="text" name="FirstName" value="Mickey">
+    <h1 id='year'><h1>
+
+    </div>
+
+    <p> This vizualization plots the location of Meteor Strikes on the us through latitude and longitude coordinates. The size the strikes represents the relative weight of the meteor. </p>
+
+    <script>
+    var globe = planetaryjs.planet();
+
+    globe.loadPlugin(planetaryjs.plugins.earth({
+      topojson: { file:   'http://planetaryjs.com/world-110m-withlakes.json'},
+      oceans:   { fill:   '#2e3030' },
+      land:     { fill:   '#adb2b2' },
+      borders:  { stroke: '#ffffff' }
+    }));
+
+    globe.loadPlugin(lakes({ fill: '#ffffff'}));
+    globe.loadPlugin(planetaryjs.plugins.pings());
+    globe.loadPlugin(planetaryjs.plugins.drag({}));
+    globe.projection.scale(200).translate([200, 200]);
+
+    var angles = d3.scale.pow()
+    .exponent(1)
+    .domain([1, 2400000])
+    .range([0.1, 10]);
+
+    d3.csv('MeteorD.csv', function(data) {
+      var filterYear = 1901;
+
+      console.log(filterYear)
+
+      var updateYear = function() {
+        document.getElementById("year").innerHTML = parseInt(filterYear);
+      };
+
+      var percentToDate = d3.scale.linear()
+      .domain([0, 100])
+      .range([data[0].year, data[data.length-1].year]);
+
+      d3.select('#slider')
+      .on('change', function(d) {
+        filterYear = parseInt(percentToDate(d3.event.target.value));
+        updateYear();
+        pong();
+      console.log(filterYear)
+      })
+
+      var toPing = data.filter(function(d) {
+        return parseInt(d.Year) == parseInt(filterYear);
+      });
+
+      function pong(){
+        for (var i = 0; i < data.length; i++) {
+          if(data[i].year == filterYear){
+            globe.plugins.pings.add(data[i].reclong,data[i].reclat, {
+              angle: 5,
+              // angles(data[i].mass),
+              color: "red",
+              ttl:   4000
+            });
+          }
+        }
+      }
+
+  });
+
+  var canvas = document.getElementById('meatierEarth');
+  // Special code to handle high-density displays (e.g. retina, some phones)
+  // In the future, Planetary.js will handle this by itself (or via a plugin).
+  if (window.devicePixelRatio == 2) {
+    canvas.width = 800;
+    canvas.height = 800;
+    context = canvas.getContext('2d');
+    context.scale(2, 2);
+  }
+  // Draw that globe!
+  globe.draw(canvas);
+
+
+  // This plugin takes lake data from the special
+  // TopoJSON we're loading and draws them on the map.
+  function lakes(options) {
+    options = options || {};
+    var lakes = null;
+
+    return function(planet) {
+      planet.onInit(function() {
+        // We can access the data loaded from the TopoJSON plugin
+        // on its namespace on `planet.plugins`. We're loading a custom
+        // TopoJSON file with an object called "ne_110m_lakes".
+        var world = planet.plugins.topojson.world;
+        lakes = topojson.feature(world, world.objects.ne_110m_lakes);
+      });
+
+      planet.onDraw(function() {
+        planet.withSavedContext(function(context) {
+          context.beginPath();
+          planet.path.context(context)(lakes);
+          context.fillStyle = options.fill || 'black';
+          context.fill();
+        });
+      });
+    };
+  };
+  </script>
+</body>
+</html>
