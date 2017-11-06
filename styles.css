@@ -1,32 +1,66 @@
-body {
-    font-family: 'Georgia', serif;
-}
-
-h1 {
+  #inputContainer{
+    padding-left: 0;
+    padding-right: 0;
+    align:center;
+    margin:auto;
+    right:50%;
+  }
+  p{
+    color: white;
+    margin: 4px 2px;
+    background-color: black;
+    padding: 12px 20px;
     text-align: center;
-    font-weight: 400;
-    font-size: 3em;
-}
-
-main {
-    margin: 0 auto;
-    margin-top: 50px;
-    width: 95%;
-}
-
-.viz-banner {
-    width: inherit;
-    margin: 0 auto;
-    margin-bottom: 2em;
-    padding: 0.1em 1em;
-    min-height: 4em;
-    background-color: rgb(57, 43, 33);
-    font-size: 2em;
-}
-
-a {
-    width: 55%;
-    color: rgb(227, 227, 227);
-    text-align: right;
     text-decoration: none;
-}
+    display: inline-block;
+    font-size: 20px;
+    float: center;
+  }
+  #inputText{
+    margin-left: 35%;
+  }
+  #submitButton{
+    border: 2px solid;
+    color: white;
+    margin: 4px 2px;
+    cursor: pointer;
+    background-color: black;
+    border-color: #5b5a5a;
+    padding: 12px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 22px;
+    float: center;
+  }
+  #inputBox{
+      border: none;
+      padding: 4px 10px;
+      font-size:24px;
+      width: 60px;
+      height: 25px;
+      text-align: center;
+      background: black;
+      color: white;
+      margin-left: auto;
+      margin-right: auto;
+      float: center;
+  }
+  body{
+    background-color: black;
+  }
+  h1 {
+      color: white;
+      text-align: center;
+      font-size: 400%;
+  }
+  canvas{
+    width: 500px;
+    height: 500px;
+    cursor: move;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+  }
