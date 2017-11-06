@@ -14,15 +14,16 @@
     <h1> Meteorite Landings </h1>
   </div>
   <canvas id='meatierEarth' ></canvas>
-  <div id='textBox'>
-    First name: <input type="text" name="FirstName" value="Mickey">
-    <h1 id='year'><h1>
-
+  <div id='inputContainer'>
+    <p id = "inputText">Enter Year between 19:</p>
+    <input id ='inputBox'type="text" name="FirstName" value="1901">
+    <button id = 'submitButton' type="button">Submit</button>
     </div>
 
-    <p> This vizualization plots the location of Meteor Strikes on the us through latitude and longitude coordinates. The size the strikes represents the relative weight of the meteor. </p>
+    <p id='info'> This vizualization plots the location of meteor strikes .  The full documentation of the cleaning process can be found <a href="https://www.kaggle.com/djpye18/fix-data-to-map-meteorite-landings-in-the-1900-s" >here</a>. </p>
 
     <script>
+
     var globe = planetaryjs.planet();
 
     globe.loadPlugin(planetaryjs.plugins.earth({
@@ -39,28 +40,18 @@
 
     var angles = d3.scale.pow()
     .exponent(1)
-    .domain([1, 2400000])
-    .range([0.1, 10]);
+    .domain([1, 3000000])
+    .range([5, 20]);
 
-    d3.csv('MeteorD.csv', function(data) {
-      var filterYear = 1901;
-
+    d3.csv("https://www.kaggle.com/djpye18/meteorite-landings-in-1900s/downloads/1900sMeteoriteHits.csv", function(data) {
+      var filterYear = document.getElementById("inputBox").value;
       console.log(filterYear)
 
-      var updateYear = function() {
-        document.getElementById("year").innerHTML = parseInt(filterYear);
-      };
-
-      var percentToDate = d3.scale.linear()
-      .domain([0, 100])
-      .range([data[0].year, data[data.length-1].year]);
-
-      d3.select('#slider')
-      .on('change', function(d) {
-        filterYear = parseInt(percentToDate(d3.event.target.value));
-        updateYear();
+      d3.select('#submitButton')
+      .on('click', function(d) {
+        filterYear = parseInt(document.getElementById("inputBox").value);
         pong();
-      console.log(filterYear)
+        console.log(filterYear)
       })
 
       var toPing = data.filter(function(d) {
@@ -71,55 +62,54 @@
         for (var i = 0; i < data.length; i++) {
           if(data[i].year == filterYear){
             globe.plugins.pings.add(data[i].reclong,data[i].reclat, {
-              angle: 5,
-              // angles(data[i].mass),
+              angle: angles(data[i].mass),
               color: "red",
-              ttl:   4000
+              ttl:   8000
             });
           }
         }
       }
 
-  });
+    });
 
-  var canvas = document.getElementById('meatierEarth');
-  // Special code to handle high-density displays (e.g. retina, some phones)
-  // In the future, Planetary.js will handle this by itself (or via a plugin).
-  if (window.devicePixelRatio == 2) {
-    canvas.width = 800;
-    canvas.height = 800;
-    context = canvas.getContext('2d');
-    context.scale(2, 2);
-  }
-  // Draw that globe!
-  globe.draw(canvas);
+    var canvas = document.getElementById('meatierEarth');
+    // Special code to handle high-density displays (e.g. retina, some phones)
+    // In the future, Planetary.js will handle this by itself (or via a plugin).
+    if (window.devicePixelRatio == 2) {
+      canvas.width = 800;
+      canvas.height = 800;
+      context = canvas.getContext('2d');
+      context.scale(2, 2);
+    }
+    // Draw that globe!
+    globe.draw(canvas);
 
 
-  // This plugin takes lake data from the special
-  // TopoJSON we're loading and draws them on the map.
-  function lakes(options) {
-    options = options || {};
-    var lakes = null;
+    // This plugin takes lake data from the special
+    // TopoJSON we're loading and draws them on the map.
+    function lakes(options) {
+      options = options || {};
+      var lakes = null;
 
-    return function(planet) {
-      planet.onInit(function() {
-        // We can access the data loaded from the TopoJSON plugin
-        // on its namespace on `planet.plugins`. We're loading a custom
-        // TopoJSON file with an object called "ne_110m_lakes".
-        var world = planet.plugins.topojson.world;
-        lakes = topojson.feature(world, world.objects.ne_110m_lakes);
-      });
-
-      planet.onDraw(function() {
-        planet.withSavedContext(function(context) {
-          context.beginPath();
-          planet.path.context(context)(lakes);
-          context.fillStyle = options.fill || 'black';
-          context.fill();
+      return function(planet) {
+        planet.onInit(function() {
+          // We can access the data loaded from the TopoJSON plugin
+          // on its namespace on `planet.plugins`. We're loading a custom
+          // TopoJSON file with an object called "ne_110m_lakes".
+          var world = planet.plugins.topojson.world;
+          lakes = topojson.feature(world, world.objects.ne_110m_lakes);
         });
-      });
+
+        planet.onDraw(function() {
+          planet.withSavedContext(function(context) {
+            context.beginPath();
+            planet.path.context(context)(lakes);
+            context.fillStyle = options.fill || 'black';
+            context.fill();
+          });
+        });
+      };
     };
-  };
-  </script>
-</body>
-</html>
+    </script>
+  </body>
+  </html>
