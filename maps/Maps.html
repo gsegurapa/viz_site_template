@@ -3,7 +3,6 @@
 <head>
   <script type='text/javascript' src='https://d3js.org/d3.v3.min.js'></script>
   <script type='text/javascript' src='https://d3js.org/topojson.v1.min.js'></script>
-  <script type='text/javascript' src='https://planetaryjs.com/world-110m-withlakes.json'></script>
   <script type='text/javascript' src='planetaryjs.min.js'></script>
   <meta charset='utf-8'>
   <title>Meteor Strikes</title>
@@ -28,7 +27,7 @@
     var globe = planetaryjs.planet();
 
     globe.loadPlugin(planetaryjs.plugins.earth({
-      topojson: { file:   'http://planetaryjs.com/world-110m-withlakes.json'},
+      topojson: { file:   'https://planetaryjs.com/world-110m-withlakes.json'},
       oceans:   { fill:   '#2e3030' },
       land:     { fill:   '#adb2b2' },
       borders:  { stroke: '#ffffff' }
