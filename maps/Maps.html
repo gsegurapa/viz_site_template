@@ -43,7 +43,7 @@
     .domain([1, 3000000])
     .range([5, 20]);
 
-    d3.csv("https://www.kaggle.com/djpye18/meteorite-landings-in-1900s/downloads/1900sMeteoriteHits.csv", function(data) {
+    d3.csv("1900sMeteoriteHits.csv", function(data) {
       var filterYear = document.getElementById("inputBox").value;
       console.log(filterYear)
 
