@@ -15,7 +15,7 @@
   </div>
   <canvas id='meatierEarth' ></canvas>
   <div id='inputContainer'>
-    <p id = "inputText">Enter Year between 19:</p>
+    <p id = "inputText">Enter a year in the 1900's:</p>
     <input id ='inputBox'type="text" name="FirstName" value="1901">
     <button id = 'submitButton' type="button">Submit</button>
     </div>
@@ -27,7 +27,7 @@
     var globe = planetaryjs.planet();
 
     globe.loadPlugin(planetaryjs.plugins.earth({
-      topojson: { file:   'https://planetaryjs.com/world-110m-withlakes.json'},
+      topojson: { file:   'http://planetaryjs.com/world-110m-withlakes.json'},
       oceans:   { fill:   '#2e3030' },
       land:     { fill:   '#adb2b2' },
       borders:  { stroke: '#ffffff' }
@@ -50,7 +50,7 @@
       d3.select('#submitButton')
       .on('click', function(d) {
         filterYear = parseInt(document.getElementById("inputBox").value);
-        pong();
+        ping();
         console.log(filterYear)
       })
 
@@ -58,7 +58,7 @@
         return parseInt(d.Year) == parseInt(filterYear);
       });
 
-      function pong(){
+      function ping(){
         for (var i = 0; i < data.length; i++) {
           if(data[i].year == filterYear){
             globe.plugins.pings.add(data[i].reclong,data[i].reclat, {
