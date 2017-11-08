@@ -1,6 +1,6 @@
 # Template for Data Viz Projects
 
-## YOUR NAME HERE
+## Gerardo Segura & Daniel Pye
 
 ### Steps
 1. Fork this repository over to your own github account.
