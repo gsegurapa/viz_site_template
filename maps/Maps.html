@@ -25,19 +25,24 @@
     <script>
 
     var globe = planetaryjs.planet();
-
+      
+    //Setting colors of vizualization
     globe.loadPlugin(planetaryjs.plugins.earth({
       topojson: { file:   'world-110m-withlakes.json'},
       oceans:   { fill:   '#2e3030' },
       land:     { fill:   '#adb2b2' },
       borders:  { stroke: '#ffffff' }
     }));
-
+      
     globe.loadPlugin(lakes({ fill: '#ffffff'}));
+      
+    //Plugins that allow vizualization to be interactive 
     globe.loadPlugin(planetaryjs.plugins.pings());
     globe.loadPlugin(planetaryjs.plugins.drag({}));
+    //scales the viz
     globe.projection.scale(200).translate([200, 200]);
-
+      
+   // Scale for mass of meteor to size of ping
     var angles = d3.scale.pow()
     .exponent(1)
     .domain([1, 3000000])
@@ -45,25 +50,25 @@
 
     d3.csv("1900sMeteoriteHits.csv", function(data) {
       var filterYear = document.getElementById("inputBox").value;
-      console.log(filterYear)
-
+      
+      //when pressed creates pings acorrding to year meteor hit
       d3.select('#submitButton')
       .on('click', function(d) {
         filterYear = parseInt(document.getElementById("inputBox").value);
         ping();
-        console.log(filterYear)
       })
-
-      var toPing = data.filter(function(d) {
-        return parseInt(d.Year) == parseInt(filterYear);
-      });
-
+      
+      
+      //function to create ping using long, lat, and mass
       function ping(){
         for (var i = 0; i < data.length; i++) {
+          //filters strikes by year selected
           if(data[i].year == filterYear){
             globe.plugins.pings.add(data[i].reclong,data[i].reclat, {
+              //size of ping
               angle: angles(data[i].mass),
               color: "red",
+              //duration of ping
               ttl:   8000
             });
           }
@@ -71,7 +76,7 @@
       }
 
     });
-
+      
     var canvas = document.getElementById('meatierEarth');
     // Special code to handle high-density displays (e.g. retina, some phones)
     // In the future, Planetary.js will handle this by itself (or via a plugin).
@@ -81,16 +86,15 @@
       context = canvas.getContext('2d');
       context.scale(2, 2);
     }
-    // Draw that globe!
+    // Draws the globe
     globe.draw(canvas);
-
-
-    // This plugin takes lake data from the special
-    // TopoJSON we're loading and draws them on the map.
+      
+    //Draws lakes
     function lakes(options) {
       options = options || {};
       var lakes = null;
-
+      
+      
       return function(planet) {
         planet.onInit(function() {
           // We can access the data loaded from the TopoJSON plugin
