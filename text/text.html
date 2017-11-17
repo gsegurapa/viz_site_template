@@ -1,10 +1,86 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset='utf-8'>
-    <title>PLACEHOLDER</title>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+
+  <meta charset='utf-8'>
+  <title>Andover Words</title>
+  <link href="Style.css" type = "text/css" rel ="stylesheet">
 </head>
+
 <body>
-  <h1> TEXT PLACEHOLDER </h1>
+  <div id='heading'>
+    <h1> Common Andover Word </h1>
+    <div id="container"></div>
+  </div>
+
+  <script>
+  const
+  width = 900,
+  height = 700,
+  margin = {
+    top: 10,
+    bottom: 100,
+    left: 100,
+    right: 10,
+  };
+
+  d3.csv("AndoverWords.csv", function(data){
+    var svg = d3.select("#container").append("svg")
+    .attr("width", width)
+    .attr("height", height)
+    .attr("id","svg1")
+    .style("margin", "0 auto")
+    .style("display", "block")
+
+    var rect = svg.selectAll("rect")
+    .data(data)
+    .enter()
+    .append("rect")
+    .attr("x", function(d, i) {return i*(width/100)})
+    .attr("width",(width/100))
+    .attr("fill", "blue")
+    .attr("stroke", "black")
+    .attr("height", function(d) {return(d.count * (height/2819))})
+    .attr("y",function(d) {return height - (d.count * (height/2819))})
+    .on("mouseover", function(d,i){
+      d3.select(this)
+      .transition()
+      .duration("2")
+      .attr("fill", "#006d96")
+
+      svg.append("text")
+      .attr("x", 350)
+      .attr("y", 350)
+      .attr("font-size", "30")
+      .text(`Word: ${d.word}`)
+      .classed("popup", true)
+
+      svg.append("text")
+      .attr("x", 350)
+      .attr("y", 400)
+      .attr("font-size", "30")
+      .text(`Count:${d.count} `)
+      .classed("popup", true)
+
+
+    })
+    .on("mouseout", function(d, i) {
+      d3.selectAll(".popup")
+      .transition("remove_popup")
+      .duration(2)
+      .attr("opacity", 0.0)
+      .remove()
+      d3.select(this)
+      .transition()
+      .duration("2")
+      .attr("fill", "blue")
+
+    })
+  })
+
+  </script>
+
 </body>
 </html>
+
